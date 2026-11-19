@@ -1,0 +1,8 @@
+node_modules
+.next
+.env*
+!.env.example
+.vercel
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

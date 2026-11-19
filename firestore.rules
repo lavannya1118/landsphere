@@ -1,0 +1,86 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signed() { return request.auth != null; }
+    function userPath() { return /databases/$(db)/documents/users/$(request.auth.uid); }
+    function userRole() { return get(userPath()).data.role; }
+    function bootstrapAdmin() {
+      return signed()
+        && request.auth.token.email == 'lavannya1118@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+    function admin() {
+      return signed()
+        && (bootstrapAdmin() || (exists(userPath()) && userRole() == 'admin'));
+    }
+    function staff() {
+      return admin()
+        || (signed() && exists(userPath()) && userRole() == 'officer');
+    }
+
+    match /users/{u} {
+      allow read: if signed() && (request.auth.uid == u || staff());
+      allow create: if signed()
+        && request.auth.uid == u
+        && (request.resource.data.role == 'citizen'
+          || (bootstrapAdmin() && request.resource.data.role == 'admin'));
+      allow update: if (admin()
+          && (resource.data.email != 'lavannya1118@gmail.com'
+            || request.resource.data.role == 'admin'))
+        || (signed()
+          && request.auth.uid == u
+          && request.resource.data.role == resource.data.role);
+    }
+    match /userPreferences/{uid} {
+      function validPreference() {
+        return request.resource.data.keys().hasOnly(['theme', 'language', 'updatedAt'])
+          && (!('theme' in request.resource.data)
+            || request.resource.data.theme in ['light', 'dark', 'system'])
+          && (!('language' in request.resource.data)
+            || request.resource.data.language in ['en', 'hi', 'mr'])
+          && (!('updatedAt' in request.resource.data)
+            || request.resource.data.updatedAt is int);
+      }
+      allow read: if signed() && request.auth.uid == uid;
+      allow create, update: if signed()
+        && request.auth.uid == uid
+        && validPreference();
+      allow delete: if false;
+    }
+    match /land_parcels/{p} {
+      allow read: if signed();
+      allow write: if admin();
+    }
+    match /land_documents/{d} {
+      allow read: if signed() && (resource.data.ownerUid == request.auth.uid || staff());
+      allow create: if signed();
+      allow update, delete: if staff();
+    }
+    match /complaints/{c} {
+      allow read: if signed() && (resource.data.uid == request.auth.uid || staff());
+      allow create: if signed() && request.resource.data.uid == request.auth.uid;
+      allow update: if staff();
+    }
+    match /applications/{a} {
+      allow read: if signed() && (resource.data.uid == request.auth.uid || staff());
+      allow create: if signed() && request.resource.data.uid == request.auth.uid;
+      allow update: if staff();
+    }
+    match /notifications/{n} {
+      allow read: if signed() && resource.data.uid == request.auth.uid;
+      allow write: if staff();
+    }
+    match /saved_parcels/{s} {
+      allow read, write: if signed() && resource.data.uid == request.auth.uid;
+      allow create: if signed();
+    }
+    match /ai_conversations/{c} {
+      allow read, write: if signed() && resource.data.uid == request.auth.uid;
+      allow create: if signed();
+    }
+    match /audit_logs/{l} {
+      allow read: if admin();
+      allow create: if signed();
+    }
+  }
+}

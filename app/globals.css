@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --page: #F5F6F2;
+  --surface: #FFFFFF;
+  --surface-muted: #EEF2EF;
+  --text: #263746;
+  --muted: #647780;
+  --border: #DCE7E3;
+  --navy: #142B3B;
+  --emerald: #24765B;
+  --teal: #16A69A;
+  --focus: #16A69A;
+  --shadow-card: 0 12px 32px rgb(20 43 59 / 7%);
+}
+
+:root.dark {
+  color-scheme: dark;
+  --page: #101E27;
+  --surface: #172B38;
+  --surface-muted: #203744;
+  --text: #EDF4F1;
+  --muted: #A8BCBE;
+  --border: #2B4652;
+  --navy: #142B3B;
+  --emerald: #50A987;
+  --teal: #47C4B4;
+  --focus: #47C4B4;
+  --shadow-card: 0 14px 36px rgb(0 0 0 / 18%);
+}
+
+@layer base {
+  html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+    background: var(--page);
+  }
+
+  body {
+    @apply min-h-screen font-sans antialiased;
+    background: var(--page);
+    color: var(--text);
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-heading;
+    color: var(--text);
+  }
+
+  button, input, select, textarea {
+    font: inherit;
+  }
+
+  button:focus-visible, a:focus-visible, input:focus-visible,
+  select:focus-visible, textarea:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--focus) 58%, transparent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--teal) 25%, transparent);
+  }
+}
+
+.card {
+  @apply rounded-2xl border p-5;
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: var(--shadow-card);
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition;
+  background: var(--navy);
+  color: #fff;
+}
+
+.btn:hover {
+  background: #203C4D;
+}
+
+.btn:disabled, .btn2:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.btn2 {
+  @apply btn;
+  background: var(--emerald);
+}
+
+.btn2:hover {
+  background: #1D614B;
+}
+
+.inp {
+  @apply w-full rounded-xl border px-3 py-2.5 text-sm;
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.inp::placeholder {
+  color: var(--muted);
+}
+
+.site-header, .app-topbar {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+
+.brand-link {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.brand-link img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.app-sidebar {
+  background: var(--navy);
+  color: #F5F6F2;
+}
+
+.app-sidebar h1, .app-sidebar h2, .app-sidebar h3 {
+  color: inherit;
+}
+
+.app-nav-link {
+  color: #DCE7E3;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.app-nav-link:hover, .app-nav-link.is-active {
+  background: rgb(255 255 255 / 11%);
+  color: #fff;
+}
+
+.theme-selector {
+  @apply inline-flex items-center gap-0.5 rounded-xl border p-1;
+  background: var(--surface-muted);
+  border-color: var(--border);
+}
+
+.theme-option {
+  @apply inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg px-2.5 text-xs font-medium transition;
+  color: var(--muted);
+}
+
+.theme-option:hover {
+  color: var(--text);
+}
+
+.theme-option.is-selected {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 5px rgb(20 43 59 / 10%);
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgb(220 231 227 / 42%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(220 231 227 / 42%) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.dark .hero-grid {
+  background-image:
+    linear-gradient(rgb(220 231 227 / 8%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(220 231 227 / 8%) 1px, transparent 1px);
+}
+
+.dark .leaflet-control-layers, .dark .leaflet-bar {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.dark .leaflet-control-layers a, .dark .leaflet-bar a {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.dark .leaflet-control-layers-separator {
+  border-top-color: var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

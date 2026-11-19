@@ -1,0 +1,16 @@
+module.exports={
+ darkMode:'class',
+ content:['./app/**/*.{ts,tsx}','./components/**/*.{ts,tsx}'],
+ theme:{extend:{
+  colors:{
+   navy:{DEFAULT:'#142B3B',700:'#203C4D'},
+   emerald:{DEFAULT:'#24765B'},
+   teal:{DEFAULT:'#16A69A'},
+   sage:{DEFAULT:'#DCE7E3'},
+  },
+  fontFamily:{
+   sans:['var(--font-inter)','Inter','system-ui','sans-serif'],
+   heading:['var(--font-manrope)','Manrope','Inter','sans-serif'],
+  },
+ }},
+};
